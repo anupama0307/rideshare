@@ -1,0 +1,31 @@
+{
+  "name": "ride-sharing-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Intelligent Ride-Sharing & Sustainable Mobility Platform",
+  "scripts": {
+    "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
+    "dev:backend": "pnpm --filter @rideshare/backend dev",
+    "dev:frontend": "pnpm --filter @rideshare/frontend dev",
+    "build": "pnpm --filter @rideshare/shared build && pnpm --filter @rideshare/backend build && pnpm --filter @rideshare/frontend build",
+    "build:backend": "pnpm --filter @rideshare/backend build",
+    "build:frontend": "pnpm --filter @rideshare/frontend build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "db:migrate": "pnpm --filter @rideshare/backend migrate",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "maplibre-gl": "^4.7.1"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

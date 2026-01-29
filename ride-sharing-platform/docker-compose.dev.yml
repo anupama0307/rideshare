@@ -1,0 +1,53 @@
+version: '3.8'
+
+# Development override configuration
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: deps
+    container_name: rideshare-backend-dev
+    command: npm run dev --workspace=backend
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://rideshare:rideshare_secret@postgres:5432/rideshare
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev-secret-key
+    volumes:
+      - ./backend/src:/app/backend/src:ro
+      - ./packages/shared/src:/app/packages/shared/src:ro
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - redis
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: deps
+    container_name: rideshare-frontend-dev
+    command: npm run dev --workspace=frontend
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+      NEXT_PUBLIC_SOCKET_URL: http://localhost:3001
+      NEXT_PUBLIC_MAPBOX_TOKEN: ${NEXT_PUBLIC_MAPBOX_TOKEN}
+    volumes:
+      - ./frontend/src:/app/frontend/src:ro
+      - ./packages/shared/src:/app/packages/shared/src:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
